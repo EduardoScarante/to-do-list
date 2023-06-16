@@ -1,4 +1,0 @@
-<template>
-    Login View
-</template>
-    

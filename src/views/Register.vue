@@ -1,4 +1,0 @@
-<template>
-    Register View
-</template>
-    
