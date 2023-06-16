@@ -8,6 +8,9 @@ export default {
         confirmPassword: '',
         isInvalidInfos: '',
 
+        showPass: false,
+        showPassConfirm: false,
+
         /* LOADING */
         loading: false,
 
@@ -51,7 +54,7 @@ export default {
             });
 
             this.loading = true
-            setTimeout( () => {
+            setTimeout(() => {
                 this.loading = false
                 this.$router.push("app")
             }, 2000)
@@ -66,12 +69,25 @@ export default {
             <v-text-field v-model="username" :rules="usernameRules" label="Type your Username"></v-text-field>
             <v-text-field v-model="email" :rules="emailRules" label="Type an Email"></v-text-field>
 
-            <v-text-field v-model="password" :rules="passwordRules" label="Choose a Password"
-                type="password"></v-text-field>
-            <v-text-field v-model="confirmPassword" :rules="[checkPass]" label="Confirm yout password"
-                type="password"></v-text-field>
+            <v-text-field 
+            v-model="password" 
+            :rules="passwordRules" 
+            label="Choose a Password"
+            :type="showPass ? 'text' : 'password'" 
+            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPass = !showPass"
+            ></v-text-field>
+            <v-text-field 
+            v-model="confirmPassword" 
+            :rules="[checkPass]" 
+            label="Confirm yout password"
+            :type="showPassConfirm ? 'text' : 'password'" 
+            :append-icon="showPassConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+            @click:append="showPassConfirm = !showPassConfirm"
+            type="password"></v-text-field>
 
-            <v-btn variant="tonal" size="large" type="submit" :loading="loading" block class="mt-2" :disabled="!isInvalidInfos">Register</v-btn>
+            <v-btn variant="tonal" size="large" type="submit" :loading="loading" block class="mt-2"
+                :disabled="!isInvalidInfos">Register</v-btn>
         </v-form>
     </v-sheet>
 </template>
