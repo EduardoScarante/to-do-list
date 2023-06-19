@@ -24,8 +24,11 @@ export default {
             return true
         }],
         emailRules: [value => {
+            let regexEmail = /.+@.+\..+/;
+            if (!regexEmail.test(value)) return 'Invalid email type'
+            
             if (!value) return 'write something'
-            if ((!value.includes("@")) || (!value.includes(".com"))) return 'Invalid email type'
+            
             return true
         }],
         passwordRules: [value => {
