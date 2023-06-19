@@ -7,15 +7,36 @@ export default {
     Login,
     Register
   },
-  data: () => ({
-    tab: null,
-  }),
+  methods: {
+    handleAlertModal() {
+      this.showAlertModel = !this.showAlertModel;
+      this.tab = "one";
+    }
+  },
+  data() {
+    return {
+      tab: null,
+      showAlertModel: true,
+    }
+  },
 }
 </script>
 
 <template>
-  <v-app>
-    <v-card width="400" class="ma-auto bg-white elevation-10 ">
+  <v-app class="bg">
+    <v-snackbar v-model="showAlertModel" color="green">
+      <p class="font-weight-bold">User created successfully</p>
+      <p>Log in now!</p>
+      <template v-slot:actions>
+        <v-btn color="white" @click="handleAlertModal">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <!--  -->
+
+    <v-card width="400" class="ma-auto bg-white elevation-10 rounded-lg">
       <v-tabs v-model="tab">
         <v-tab value="one" class="w-50">Login</v-tab>
         <v-tab value="two" class="w-50">Register</v-tab>
@@ -28,7 +49,7 @@ export default {
           </v-window-item>
 
           <v-window-item value="two">
-            <Register />
+            <Register v-on:openModelSucess="handleAlertModal" />
           </v-window-item>
 
         </v-window>
@@ -38,3 +59,9 @@ export default {
     <router-view />
   </v-app>
 </template>
+
+<style scoped>
+.bg {
+  background: linear-gradient(144deg, rgba(254, 254, 254, 1) 32%, rgba(219, 219, 219, 1) 88%);
+}
+</style>
