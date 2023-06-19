@@ -33,6 +33,7 @@ export default {
             let regexNumber = /(\d+)| /g
 
             if (value?.split('').length <= 7) return 'Must contain at least 8 characters'
+            if (value?.includes(' ')) return 'Cannot contain a space bar'
             if (!regexSpecialCaractere.test(value)) return 'Must contain a special character'
             if (!regexNumber.test(value)) return 'Must contain a Number'
 
