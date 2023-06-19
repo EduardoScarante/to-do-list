@@ -1,11 +1,4 @@
 <script>
-export default {
-  methods: {
-    goToRegister() {
-      console.log("work");
-    },
-  },
-};
 </script>
 
 <template>
@@ -15,7 +8,7 @@ export default {
       
       <v-spacer></v-spacer>
       
-      <v-btn icon @click="goToRegister()">
+      <v-btn>
         <v-icon>mdi-account-multiple-plus </v-icon>
       </v-btn>
     </v-app-bar>
