@@ -32,7 +32,7 @@ export default {
             let regexSpecialCaractere = /\W|_/;
             let regexNumber = /(\d+)| /g
 
-            if (value.split('').length <= 7) return 'Must contain at least 8 characters'
+            if (value?.split('').length <= 7) return 'Must contain at least 8 characters'
             if (!regexSpecialCaractere.test(value)) return 'Must contain a special character'
             if (!regexNumber.test(value)) return 'Must contain a Number'
 
@@ -55,8 +55,9 @@ export default {
 
             this.loading = true
             setTimeout(() => {
+                this.$emit('openModelSucess')
                 this.loading = false
-                this.$router.push("app")
+                this.$refs.form.reset()
             }, 2000)
         }
     }
@@ -65,45 +66,21 @@ export default {
 
 <template>
     <v-sheet width="300" class="mx-auto">
-        <v-form @submit.prevent="handleSubmit" v-model="isInvalidInfos">
+        <v-form @submit.prevent="handleSubmit" v-model="isInvalidInfos" ref="form">
             <v-text-field v-model="username" :rules="usernameRules" label="Type your Username"></v-text-field>
             <v-text-field v-model="email" :rules="emailRules" label="Type an Email"></v-text-field>
 
-            <v-text-field 
-            v-model="password" 
-            :rules="passwordRules" 
-            label="Choose a Password"
-            :type="showPass ? 'text' : 'password'" 
-            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="showPass = !showPass"
-            ></v-text-field>
-            <v-text-field 
-            v-model="confirmPassword" 
-            :rules="[checkPass]" 
-            label="Confirm yout password"
-            :type="showPassConfirm ? 'text' : 'password'" 
-            :append-icon="showPassConfirm ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="showPassConfirm = !showPassConfirm"
-            type="password"></v-text-field>
+            <v-text-field v-model="password" :rules="passwordRules" label="Choose a Password"
+                :type="showPass ? 'text' : 'password'" :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPass = !showPass"></v-text-field>
+            <v-text-field v-model="confirmPassword" :rules="[checkPass]" label="Confirm yout password"
+                :type="showPassConfirm ? 'text' : 'password'" :append-icon="showPassConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassConfirm = !showPassConfirm" type="password"></v-text-field>
 
             <v-btn variant="tonal" size="large" type="submit" :loading="loading" block class="mt-2"
                 :disabled="!isInvalidInfos">Register</v-btn>
         </v-form>
+
     </v-sheet>
 </template>
 
-<!-- 
-
-    Username
-Email
-
-Senha
-Confirmação de senha
-
-Botão para ir para login
-Botão de cadastrar
-Validações
-
-username - todos os caracteres em lowercase e sem espaços
-senha - mínimo 8 caracteres, conter 1 caractere especial e 1 número
- -->
