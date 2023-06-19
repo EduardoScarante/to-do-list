@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       tab: null,
-      showAlertModel: true,
+      showAlertModel: false,
     }
   },
 }
