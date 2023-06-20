@@ -11,6 +11,9 @@ export default {
     handleAlertModal() {
       this.showAlertModel = !this.showAlertModel;
       this.tab = "one";
+    },
+    toogleTab() {
+      this.tab == "one" ? this.tab = "two" : this.tab = "one"
     }
   },
   data() {
@@ -36,20 +39,20 @@ export default {
 
     <!--  -->
 
-    <v-card width="400" class="ma-auto bg-white elevation-10 rounded-lg">
-      <v-tabs v-model="tab">
+    <v-card width="1000" height="auto" class="d-flex align-center ma-auto bg-white elevation-20 rounded-lg">
+      <!--       <v-tabs v-model="tab">
         <v-tab value="one" class="w-50">Login</v-tab>
         <v-tab value="two" class="w-50">Register</v-tab>
-      </v-tabs>
+      </v-tabs> -->
 
-      <v-card-text>
-        <v-window v-model="tab" class="py-6">
+      <v-card-text class="pa-0">
+        <v-window v-model="tab">
           <v-window-item value="one">
-            <login />
+            <login v-on:changeTag="toogleTab" />
           </v-window-item>
 
           <v-window-item value="two">
-            <Register v-on:openModelSucess="handleAlertModal" />
+            <Register v-on:changeTag="toogleTab" v-on:openModelSucess="handleAlertModal" />
           </v-window-item>
 
         </v-window>
@@ -62,6 +65,6 @@ export default {
 
 <style scoped>
 .bg {
-  background: linear-gradient(144deg, rgba(254, 254, 254, 1) 32%, rgb(255, 239, 239) 88%);
+  background: linear-gradient(144deg, rgba(254, 254, 254, 1) 25%, #F6CA9B 100%);
 }
 </style>
