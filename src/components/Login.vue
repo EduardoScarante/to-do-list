@@ -44,8 +44,9 @@ export default {
     <v-form @submit.prevent="handleSubmit" v-model="isInvalidInfos">
       <v-text-field v-model="email" :rules="emailRules" label="Type your Email"></v-text-field>
       <v-text-field v-model="password" :rules="passwordRules" label="Now, your password"
-        :type="showPass ? 'text' : 'password'" :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPass ? 'text' : 'password'" :append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append="showPass = !showPass"></v-text-field>
+
       <v-btn variant="tonal" type="submit" size="large" block class="mt-2" :loading="loading"
         :disabled="!isInvalidInfos">Login</v-btn>
 
