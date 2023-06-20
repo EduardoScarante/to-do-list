@@ -1,4 +1,7 @@
 <script>
+
+import imgRegister from '@/assets/imgs/register-img.jpg'
+
 export default {
     data: () => ({
         /* VARIAVEIS */
@@ -14,6 +17,9 @@ export default {
         /* LOADING */
         loading: false,
 
+        /* IMG IMPORT */
+        imgRegister,
+
 
         /* RULES */
         usernameRules: [value => {
@@ -26,9 +32,9 @@ export default {
         emailRules: [value => {
             let regexEmail = /.+@.+\..+/;
             if (!regexEmail.test(value)) return 'Invalid email type'
-            
+
             if (!value) return 'write something'
-            
+
             return true
         }],
         passwordRules: [value => {
@@ -37,6 +43,7 @@ export default {
 
             if (value?.split('').length <= 7) return 'Must contain at least 8 characters'
             if (value?.includes(' ')) return 'Cannot contain a space bar'
+            if (value?.includes('.')) return 'Cannot contain a dot'
             if (!regexSpecialCaractere.test(value)) return 'Must contain a special character'
             if (!regexNumber.test(value)) return 'Must contain a Number'
 
@@ -63,28 +70,48 @@ export default {
                 this.loading = false
                 this.$refs.form.reset()
             }, 2000)
+        },
+        changeTag() {
+            this.$emit('changeTag')
         }
     }
 }
 </script>
 
 <template>
-    <v-sheet width="300" class="mx-auto">
-        <v-form @submit.prevent="handleSubmit" v-model="isInvalidInfos" ref="form">
-            <v-text-field v-model="username" :rules="usernameRules" label="Type your Username"></v-text-field>
-            <v-text-field v-model="email" :rules="emailRules" label="Type an Email"></v-text-field>
+    <div class="container d-flex">
 
-            <v-text-field v-model="password" :rules="passwordRules" label="Choose a Password"
-                :type="showPass ? 'text' : 'password'" :append-inner-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showPass = !showPass"></v-text-field>
-            <v-text-field v-model="confirmPassword" :rules="[checkPass]" label="Confirm yout password"
-                :type="showPassConfirm ? 'text' : 'password'" :append-inner-icon="showPassConfirm ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showPassConfirm = !showPassConfirm" type="password"></v-text-field>
+        <v-sheet class="mx-auto d-flex flex-column justify-center w-75 px-10">
+            
+            <p class="d-flex justify-center text-black text-h5 font-weight-bold pb-5">Register</p>
 
-            <v-btn variant="tonal" size="large" type="submit" :loading="loading" block class="mt-2"
-                :disabled="!isInvalidInfos">Register</v-btn>
-        </v-form>
+            <v-form @submit.prevent="handleSubmit" v-model="isInvalidInfos" ref="form">
+                <v-text-field variant="underlined" v-model="username" :rules="usernameRules" label="Type your Username"></v-text-field>
+                <v-text-field variant="underlined" v-model="email" :rules="emailRules" label="Type an Email"></v-text-field>
 
-    </v-sheet>
+                <v-text-field variant="underlined" v-model="password" :rules="passwordRules" label="Choose a Password"
+                    :type="showPass ? 'text' : 'password'" :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPass = !showPass"></v-text-field>
+                <v-text-field variant="underlined" v-model="confirmPassword" :rules="[checkPass]" label="Confirm your password"
+                    :type="showPassConfirm ? 'text' : 'password'" :append-icon="showPassConfirm ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPassConfirm = !showPassConfirm" type="password"></v-text-field>
+
+                <v-btn variant="tonal" size="large" type="submit" :loading="loading" block class="mt-2"
+                    :disabled="!isInvalidInfos">Register</v-btn>
+            </v-form>
+
+            <button class="pt-10 text-grey" @click="changeTag">Already have an account?</button>
+        </v-sheet>
+
+        <div class="w-100 d-flex justify-center align-center">
+            <img :src="imgRegister" class="h-100" alt="">
+        </div>
+
+    </div>
 </template>
 
+<style scoped>
+.container{
+    height: 600px;
+}
+</style>
