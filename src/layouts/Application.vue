@@ -1,4 +1,14 @@
 <script>
+
+export default{
+  methods:{
+    logOut(){
+      localStorage.removeItem("access_token")
+      this.$router.push('/')
+    }
+  }
+}
+
 </script>
 
 <template>
@@ -9,7 +19,7 @@
       <v-spacer></v-spacer>
       
       <v-btn>
-        <v-icon>mdi-account-multiple-plus </v-icon>
+        <div @click="logOut">Log Out</div>
       </v-btn>
     </v-app-bar>
     
