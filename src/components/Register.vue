@@ -74,13 +74,6 @@ export default {
                 const status = err.response.status
                 alert(status + err)
             }
-
-            /* this.loading = true
-            setTimeout(() => {
-                this.$emit('openModelSucess')
-                this.loading = false
-                this.$refs.form.reset()
-            }, 2000) */
         },
         changeTag() {
             this.$emit('changeTag')
