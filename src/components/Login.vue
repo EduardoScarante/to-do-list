@@ -1,8 +1,12 @@
 <script>
 
 import imgLogin from '@/assets/imgs/login-img.jpg'
+import { authApiMixin } from '@/api/auth'
+import { setupPrivateApi } from '@/api';
+
 
 export default {
+  mixins: [authApiMixin],
   data: () => ({
     email: '',
     password: '',
@@ -24,7 +28,7 @@ export default {
     ],
     passwordRules: [
       value => {
-        if (value?.split('').length <= 7) return 'Must contain at least 8 characters'
+        if (value?.split('').length <= 2) return 'Must contain at least 2 characters'
         if (!value) return 'You have to write something.'
         return true
       }
@@ -32,12 +36,23 @@ export default {
   }
   ),
   methods: {
-    handleSubmit() {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
+    async handleSubmit() {
+      const payload = {
+        "email": this.email,
+        "password": this.password
+      }
+
+      try{
+        const { data } = await this.login(payload)
+        const { access_token } = data
+        setupPrivateApi(access_token)
+        localStorage.setItem("access_token", access_token)
+
         this.$router.push("app")
-      }, 2000)
+      } catch (err) {
+        console.log(err);
+        alert("erro")
+      }
     },
     changeTab() {
       this.$emit('changeTag')
@@ -71,9 +86,10 @@ export default {
           :disabled="!isInvalidInfos">Login
         </v-btn>
       </v-form>
-      
-      <button @click="forgotPass" class="d-flex justify-center mt-5 pb-5 text-orange-darken-4 font-weight-medium">Forgot your password?!</button>
-      
+
+      <button @click="forgotPass" class="d-flex justify-center mt-5 pb-5 text-orange-darken-4 font-weight-medium">Forgot
+        your password?!</button>
+
       <v-divider></v-divider>
 
       <button @click="changeTab" class="d-flex justify-center mt-5 text-purple text-grey">Don't have an account?!</button>

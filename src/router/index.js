@@ -12,7 +12,7 @@ const routes = [
     children: [
       {
         path: "",
-        name: "to-do-list",
+        name: "",
 
         component: () => import("@/views/List.vue"),
       },
