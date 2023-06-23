@@ -2,9 +2,9 @@ import axios from "axios"
 
 export const publicApi = axios.create({
     baseURL: "http://localhost:3333",
-    headers: new Headers({
+    headers:{
         "Content-type": "application/json"
-    }),
+    },
 })
 
 export let privateApi
