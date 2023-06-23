@@ -1,10 +1,11 @@
 <script>
 
-export default{
-  methods:{
-    logOut(){
+export default {
+  methods: {
+    logOut() {
       localStorage.removeItem("access_token")
-      this.$router.push('/')
+      location.replace("/");
+      //this.$router.push('/')
     }
   }
 }
@@ -15,14 +16,14 @@ export default{
   <v-app>
     <v-app-bar :elevation="2">
       <v-app-bar-title>To Do List</v-app-bar-title>
-      
+
       <v-spacer></v-spacer>
-      
+
       <v-btn>
         <div @click="logOut">Log Out</div>
       </v-btn>
     </v-app-bar>
-    
+
     <br><br>
 
     <router-view />
