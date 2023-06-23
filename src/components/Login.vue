@@ -8,8 +8,8 @@ import { setupPrivateApi } from '@/api';
 export default {
   mixins: [authApiMixin],
   data: () => ({
-    email: '',
-    password: '',
+    email: 'eduardo@mail.com',
+    password: '1234',
     isInvalidInfos: '',
     loading: false,
     showPass: false,
