@@ -17,10 +17,12 @@ export const toDoItemsApiMixin = {
         return await privateApi.get(`/items/${id}`);
     },
     async ResolveItem(id){
-        console.log(id);
       return await privateApi.patch(`/items/${id}`, {
         "done": true
       })
-    }
+    },
+    async GetAllItens(){
+      return await privateApi.get("items")
   },
+},
 };
