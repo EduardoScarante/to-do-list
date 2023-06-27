@@ -1,11 +1,17 @@
 <script>
+import { dateFormater } from '@/mixin/dataFormater'
 export default {
+    mixins: [dateFormater],
     props: {
         infos: Object
     },
     methods:{
         closeModal(){
             this.$emit("closeModal")
+        },
+        colorPicker(el) {
+            console.log(el);
+            return el === true ? 'bg-green' : 'bg-red'
         }
     }
 }
@@ -14,13 +20,26 @@ export default {
 <template>
     <v-card color="rgba(0, 0, 0, 0.5)" class="modal d-flex align-center justify-center">
         <v-card class="w-75 pa-4">
-            <v-card-text> <h3>title:</h3> {{ infos.title }}</v-card-text>
-            <v-card-text> <h3>deadline:</h3> {{ infos.deadline }}</v-card-text>
-            <v-card-text> <h3>done:</h3> {{ infos.done }}</v-card-text>
-            <v-card-text> <h3>listId:</h3> {{ infos.listId }}</v-card-text>
-            <v-card-text> <h3>createdAt:</h3> {{ infos.createdAt }}</v-card-text>
-            <v-card-text> <h3>updatedAt:</h3> {{ infos.updatedAt }}</v-card-text>
-            <v-card-text> <h3>authorId:</h3> {{ infos.authorId }}</v-card-text>
+            <div class='d-flex align-center'>
+                <v-card-text :class=colorPicker(infos.done) class="rounded-lg"></v-card-text>
+                <v-card-title class="w-100"> {{ infos.title }}</v-card-title>
+            </div>
+
+            <span class="d-flex align-center">
+            <h4>DeadLine:</h4>
+            <v-card class="elevation-0" :text="formatDate(infos.deadline)" />
+            </span>
+
+            <span class="d-flex align-center">
+            <h4>Criado em:</h4>
+            <v-card class="elevation-0" :text="formatDateRes(infos.createdAt)" />
+            </span>
+
+            <span class="d-flex align-center" v-if="infos.done">
+            <h4>Finalizada em:</h4>
+            <v-card class="elevation-0" :text="formatDateRes(infos.updatedAt)" />
+            </span>
+
             <v-card-actions>
                 <v-btn class="elevation-2 mx-auto" @click="closeModal">
                     Fechar
