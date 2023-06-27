@@ -5,7 +5,6 @@ export const listApiMixin = {
     async list() {
       return await privateApi.get("/lists");
     },
-    //inserido em 23/06/23 (Luiz) - início
     async detailList(id) {
       return await privateApi.get(`/lists/${id}`);
     },
@@ -14,7 +13,12 @@ export const listApiMixin = {
     },
     async deleteList(id){
       return await privateApi.delete(`/lists/${id}`)
-    }
-    // fim
-  },
+    },
+    async editNameList(id, newName){
+      return await privateApi.patch(`/lists/${id}`, 
+      {
+        'title': newName
+      })
+  }
+},
 };

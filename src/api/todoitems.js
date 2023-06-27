@@ -5,11 +5,12 @@ export const toDoItemsApiMixin = {
     async deleteItem(id) {
       return await privateApi.delete(`/items/${id}`);
     },
-    async createItem(title, listId) {
+    async createItem(listId, title, deadLine) {
       return await privateApi.post("/items/new", 
       {
+        "listId": listId,
         "title": title,
-        "listId": listId
+        "deadline": deadLine,
       });
     },
     async DetailItem(id) {
