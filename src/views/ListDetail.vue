@@ -2,6 +2,8 @@
 
 import { listApiMixin } from "@/api/todolists";
 import { toDoItemsApiMixin } from "@/api/todoitems";
+import { dateFormater } from '@/mixin/dateFormater'
+
 import modalDetail from "@/components/modal/detail-item.vue"
 import ModalNewList from '@/components/modal/new-item.vue'
 import Loading from '@/components/Loading.vue'
@@ -12,14 +14,15 @@ export default {
         ModalNewList,
         Loading,
     },
-    mixins: [listApiMixin, toDoItemsApiMixin],
+    mixins: [listApiMixin, toDoItemsApiMixin, dateFormater],
+
     data() {
         return {
             items: '',
             itemDetailInfos: {},
             showModalDetail: false,
             showNewItemForm: false,
-
+           
             loading: false,
         }
     },
@@ -40,17 +43,20 @@ export default {
         },
 
         async handleResolveItem(id) {
+            this.loading = true
             const { status } = await this.ResolveItem(id)
             this.handleWithError(status)
         },
+        
         async handleShowDetail(id) {
+            this.loading = true
             const { status, data } = await this.DetailItem(id)
-            console.log(data);
             this.handleWithError(status)
             this.itemDetailInfos = data
             this.showModalDetail = true
         },
         async handleDeleleItem(id) {
+            this.loading = true
             const { status } = await this.deleteItem(id)
             this.handleWithError(status)
         },
@@ -68,7 +74,6 @@ export default {
         handleWithError(status) {
             if (status >= 200 && status < 300) {
                 this.getItems()
-                alert("Deu boa!")
             } else {
                 alert("Deu erro")
             }
@@ -79,18 +84,13 @@ export default {
         btnColor(a) {
             return a == true ? 'rgb(144, 238, 144)' : 'rgb(240, 128, 128)'
         },
-        /* FORMATAÇÂO DA DATA */
-        formatDate(date) {
-            const pureDate = date.split("T")[0].split("-").reverse().join("/")
-            const pureHour = date.split("T")[1].split(".")[0]
-            return `${pureDate} - ${pureHour}`
+       
         },
-    },
+
     computed: {
         organizeDeadlineDate() {
             if (!this.items) return ''
             const ordened = this.items.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-            console.log(ordened);
             return ordened.filter(elemento => elemento.done == false).concat(ordened.filter(elemento => elemento.done == true))
       }
     }
@@ -125,10 +125,12 @@ export default {
         </v-card>
     </v-card>
 
-    <ModalNewList v-if="showNewItemForm" @new-item="newItem"></ModalNewList>
+    <!-- MODAL DE NOVO ITEM NA LISTA -->
+    <ModalNewList v-if="showNewItemForm" @new-item="newItem" @close-modal="this.showNewItemForm=false"></ModalNewList>
 
     <!-- MODAL DE DETALHE DO ITEM -->
     <modalDetail v-if="showModalDetail" :infos="itemDetailInfos" @closeModal="this.showModalDetail = false"></modalDetail>
+   
     <!-- MODAL DE LOADING -->
     <Loading v-if="loading"></Loading>
 
