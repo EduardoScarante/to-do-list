@@ -1,5 +1,5 @@
 <script>
-import { dateFormater } from '@/mixin/dataFormater'
+import { dateFormater } from '@/mixin/dateFormater'
 export default {
     mixins: [dateFormater],
     props: {
