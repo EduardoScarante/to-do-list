@@ -1,14 +1,14 @@
 <script>
 
 import { listApiMixin } from "@/api/todolists";
-import { toDoItemsApiMixin} from "@/api/todoitems"
+import { toDoItemsApiMixin } from "@/api/todoitems"
 
 import ModalNewList from '@/components/modal/new-list.vue'
 import EditListTitle from "@/components/modal/edit-name-list.vue";
 import Loading from "@/components/Loading.vue";
 
 import Summary from "@/components/Summary.vue";
-import { renderSlot } from "vue";
+import alertDelete from "@/components/modal/alertDelete.vue";
 
 export default {
   components: {
@@ -16,6 +16,7 @@ export default {
     EditListTitle,
     Loading,
     Summary,
+    alertDelete,
   },
 
   mixins: [listApiMixin, toDoItemsApiMixin],
@@ -35,6 +36,9 @@ export default {
       loading: false,
       showModalSummary: false,
       summaryInfos: '',
+
+      modalDeleteInfos: [],
+      showModalDelete: false,
     }
   },
 
@@ -58,13 +62,21 @@ export default {
       this.openNewList = false;
       this.handleWithError(status)
     },
+
+
+    openModalDeleteItem(id, title) {
+      this.showModalDelete = true
+      this.modalDeleteInfos = [id, title]
+    },
+
     async handleDeleteItem(id) {
+      this.showModalDelete = false
       this.loading = true;
 
       const { status } = await this.deleteList(id);
       this.handleWithError(status)
     },
-    
+
 
     /* FUNÇÂO PARA EDITAR NOME DA LIST */
     openModalUpdateList(id, title) {
@@ -81,7 +93,7 @@ export default {
     },
 
     /* FUNÇÂO QUE TRATA RETORNO DA API */
-    handleWithError(status){
+    handleWithError(status) {
       this.loading = false
       if (status >= 200 && status < 300) {
         this.getLists()
@@ -94,15 +106,15 @@ export default {
     RedirectDetailItem(id) {
       this.$router.push(`/app/${id}`)
     },
-/* MONTA INFORMAÇÂO DE COMPONENTE RESUMO */
-async HandleSummary(){
+    /* MONTA INFORMAÇÂO DE COMPONENTE RESUMO */
+    async HandleSummary() {
       this.loading = true
-      const {status, data} = await this.GetAllItens()
+      const { status, data } = await this.GetAllItens()
       this.summaryInfos = data
       this.handleWithError(status)
       this.showModalSummary = true
-  }
-},
+    }
+  },
   mounted() {
     this.getLists();
   },
@@ -112,10 +124,10 @@ async HandleSummary(){
 <template>
   <div>
     <nav class="w-100 bg-blue d-flex justify-center">
-      <v-btn @click="openNewList = true" variant="plain">
+      <v-btn color=black @click="openNewList = true" variant="plain">
         CRIAR LISTA
       </v-btn>
-      <v-btn @click="HandleSummary" variant="plain">
+      <v-btn color=black @click="HandleSummary" variant="plain">
         RESUMO
       </v-btn>
     </nav>
@@ -131,8 +143,8 @@ async HandleSummary(){
         <v-btn color="blue" @click="openModalUpdateList(list.id, list.title)">
           EDITAR
         </v-btn>
-        <v-btn color="blue" @click="handleDeleteItem(list.id)"> 
-          DELETAR 
+        <v-btn color="blue" @click="openModalDeleteItem(list.id, list.title)">
+          DELETAR
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -141,18 +153,19 @@ async HandleSummary(){
     <ModalNewList @new-list="createNewList" @close-modal="this.openNewList = false" v-if="openNewList"></ModalNewList>
 
     <!-- MODAL DE EDITAR LISTA -->
-    <EditListTitle
-      @new-name-list="handleEditNameList"
-      @close-modal="this.showModalEditList = false"
-      v-if="showModalEditList"
-      :id="this.currenteId"
-      :name="this.currentTitle"
-    ></EditListTitle>
+    <EditListTitle @new-name-list="handleEditNameList" @close-modal="this.showModalEditList = false"
+      v-if="showModalEditList" :id="this.currenteId" :name="this.currentTitle"></EditListTitle>
 
-     <!-- LOADING MODAL -->
-     <Loading v-if="loading"></Loading>
+    <!-- LOADING MODAL -->
+    <Loading v-if="loading"></Loading>
 
-     <Summary :summaryInfos="this.summaryInfos" @close-modal="this.showModalSummary = false" v-if="showModalSummary"></Summary>
+    <Summary :summaryInfos="this.summaryInfos" @close-modal="this.showModalSummary = false" v-if="showModalSummary">
+    </Summary>
+
+    <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
+      @confirm-modal="handleDeleteItem"></alertDelete>
+
+
 
   </div>
 </template>
