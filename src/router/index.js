@@ -13,7 +13,7 @@ const routes = [
       {
         path: "",
         name: "",
-        component: () => import("@/views/Dashboard.vue"),
+        component: () => import("@/views/Home.vue"),
       },
       {
         path: ":id",
