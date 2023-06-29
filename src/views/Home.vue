@@ -49,6 +49,15 @@ export default {
   },
 
   methods: {
+    logOut() {
+      localStorage.removeItem("access_token")
+      location.replace("/");
+    },
+    
+    redirectToGitHub(){
+      window.open('https://github.com/EduardoScarante/to-do-list', '_blank')
+    },
+
     async getLists() {
       this.loading = true
       try {
@@ -129,10 +138,12 @@ export default {
 
 <template>
   <div>
-    <div class="w-100 bg-white d-flex justify-center">
+    <div class="w-100 bg-white d-flex justify-space-between">
 
-      <!-- RESUMO -->
+      <v-btn color=black @click="redirectToGitHub()" variant="plain"> TO DO LIST </v-btn>
       <v-btn color=black @click="HandleSummary" variant="plain"> RESUME </v-btn>
+      <v-btn color=black @click="logOut" variant="plain"> LOG OUT </v-btn>
+
     </div>
 
     <!-- COMPONENTE QUE LISTA AS LISTAS -->
@@ -145,7 +156,7 @@ export default {
     </div>
 
     <!-- NEW LIST BTN -->
-    <v-card class="w-100 stick_btn d-flex justify-center" color="transparent">
+    <v-card class="w-100 stick_btn d-flex justify-center elevation-0" color="transparent">
       <v-btn color="rgb(200, 200, 200, 0.7)" class="ma-2 rounded-md" @click="openNewList = true" variant="flat">
         NOVA LISTA
       </v-btn>
