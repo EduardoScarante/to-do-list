@@ -11,7 +11,7 @@ export default {
     },
     computed: {
         formatInfo() {
-            const counterDoneTasks = this.summaryInfos.filter( el => el.done == true).length
+            const counterDoneTasks = this.summaryInfos.filter(el => el.done == true).length
             const AllTasks = this.summaryInfos.length
             return [counterDoneTasks, AllTasks]
         }
@@ -22,12 +22,28 @@ export default {
 
 <template>
     <v-card color="rgba(0, 0, 0, 0.5)" class="modal d-flex align-center justify-center">
-        <v-card class="w-50 pa-4">
+        <v-card class="pa-4">
+            <h3>Summary</h3>
 
             <div>
-                <p>Total de tarefas: {{ formatInfo[1] }}</p>
-                <p>Total de tarefas concluidas: {{ formatInfo[0] }}</p>
-                <p>Total de tarefas em aberto: {{ formatInfo[1] - formatInfo[0]}}</p>
+                <p class="ma-4 d-flex">
+                    <span class="material-symbols-outlined text-orange mr-4">
+                        info
+                    </span>
+                    Total de tarefas: {{ formatInfo[1] }}
+                </p>
+                <p class="ma-4 d-flex">
+                    <span class="material-symbols-outlined text-green mr-4">
+                        done
+                    </span>
+                    Total de tarefas concluidas: {{ formatInfo[0] }}</p>
+
+                <p class="ma-4 d-flex">
+                    <span class="material-symbols-outlined text-red mr-4">
+                        warning
+                    </span>
+                    Total de tarefas em aberto: {{ formatInfo[1] - formatInfo[0] }}
+                </p>
             </div>
 
             <v-card-actions>

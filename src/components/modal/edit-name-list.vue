@@ -8,6 +8,11 @@ export default {
     data() {
         return {
             newNameList: '',
+            inputRule: [
+                value => {
+                    if (!value) return 'white something'
+                }
+            ]
         }
     },
     methods: {
@@ -24,10 +29,9 @@ export default {
 
 <template>
     <v-card color="rgba(0, 0, 0, 0.5)" class="modal d-flex align-center justify-center">
-        <v-card class="w-50 pa-4">
-            <v-card-subtitle>{{ id }}</v-card-subtitle>
-            <v-card-title>Nome atual da lista: {{ name }}</v-card-title>
-            <v-text-field v-model="newNameList" placeholder="Novo Nome"></v-text-field>
+        <v-card class="w-25 pa-4">
+            <v-card-title>new list name</v-card-title>
+            <v-text-field :label="name" v-model="newNameList" placeholder="Novo Nome" :rules="inputRule"></v-text-field>
             <v-action class="d-flex justify-center">
                 <v-btn @click="handleUpdateListName" class="w-25 mx-2">
                     Atualizar

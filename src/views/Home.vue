@@ -1,5 +1,7 @@
 <script>
 
+import { createClient } from 'pexels';
+
 import { listApiMixin } from "@/api/todolists";
 import { toDoItemsApiMixin } from "@/api/todoitems"
 
@@ -9,6 +11,7 @@ import Loading from "@/components/Loading.vue";
 
 import Summary from "@/components/Summary.vue";
 import alertDelete from "@/components/modal/alertDelete.vue";
+import HomeList from "@/components/HomeList.vue";
 
 export default {
   components: {
@@ -17,6 +20,7 @@ export default {
     Loading,
     Summary,
     alertDelete,
+    HomeList,
   },
 
   mixins: [listApiMixin, toDoItemsApiMixin],
@@ -39,81 +43,83 @@ export default {
 
       modalDeleteInfos: [],
       showModalDelete: false,
+
+      imgArray: [],
     }
   },
 
   methods: {
     async getLists() {
-      this.loading = true;
+      this.loading = true
       try {
         const { data } = await this.list();
+        const res = await this.GetAllItens()
         this.lists = data;
+        this.summaryInfos = res.data
       } catch (err) {
         alert("Algo deu errado");
       } finally {
-        this.loading = false;
+        await this.pexels()
+        this.loading = false
       }
     },
 
-    async createNewList(title) {
-      this.loading = true;
+    HandleSummary() {
+      this.showModalSummary = true
+    },
 
-      const { status } = await this.createList(title);
-      this.openNewList = false;
-      this.handleWithError(status)
+    createNewList(title) {
+      this.handleWithResponse(this.createList(title))
+      this.openNewList = false
     },
 
 
     openModalDeleteItem(id, title) {
-      this.showModalDelete = true
       this.modalDeleteInfos = [id, title]
+      this.showModalDelete = true
     },
 
     async handleDeleteItem(id) {
-      this.showModalDelete = false
-      this.loading = true;
-
-      const { status } = await this.deleteList(id);
-      this.handleWithError(status)
+      this.showModalDeleteInfos = false
+      this.handleWithResponse(this.deleteList(id))
     },
 
-
-    /* FUNÇÂO PARA EDITAR NOME DA LIST */
     openModalUpdateList(id, title) {
       this.currenteId = id
       this.currentTitle = title
-
       this.showModalEditList = true
     },
-    async handleEditNameList(newName, id) {
-      this.loading = true
-      const { status } = await this.editNameList(id, newName)
-      this.handleWithError(status)
+
+    handleEditNameList(newName, id) {
+      this.handleWithResponse(this.editNameList(id, newName))
       this.showModalEditList = false
     },
 
-    /* FUNÇÂO QUE TRATA RETORNO DA API */
-    handleWithError(status) {
-      this.loading = false
-      if (status >= 200 && status < 300) {
-        this.getLists()
-      } else {
-        alert("Deu erro")
-      }
-    },
-
-    /* REDIRECIONA PARA TELA DE DETALHE DA LISTA */
     RedirectDetailItem(id) {
       this.$router.push(`/app/${id}`)
     },
-    /* MONTA INFORMAÇÂO DE COMPONENTE RESUMO */
-    async HandleSummary() {
-      this.loading = true
-      const { status, data } = await this.GetAllItens()
-      this.summaryInfos = data
-      this.handleWithError(status)
-      this.showModalSummary = true
+
+    /* FUNÇÂO QUE TRATA RETORNO DA API */
+    async handleWithResponse(promise) {
+      try {
+        this.loading = true
+        return await promise
+      } catch {
+        alert("Algo deu errado :(")
+      } finally {
+        this.getLists()
+        this.loading = false
+      }
+    },
+
+    async pexels() {
+      const client = createClient('Uq2SsQQ2ZAF1EClW9XKOVxmGSZ54nq9JbinaEj1ggHAywYFj8qPggJKd');
+      const topicList = ['Academia' ,'to-do list', 'Montain', 'Nature', 'tree', 'office', 'rain'];
+      const query = topicList[(Math.floor(Math.random()*topicList.length))];
+      const { photos } = await client.photos.search({ query, per_page: this.lists.length }).then(photos => photos)
+      this.imgArray = photos.map(el => el.src.portrait)
     }
+
   },
   mounted() {
     this.getLists();
@@ -123,36 +129,32 @@ export default {
 
 <template>
   <div>
-    <nav class="w-100 bg-blue d-flex justify-center">
-      <v-btn color=black @click="openNewList = true" variant="plain">
-        CRIAR LISTA
-      </v-btn>
-      <v-btn color=black @click="HandleSummary" variant="plain">
-        RESUMO
-      </v-btn>
-    </nav>
+    <div class="w-100 bg-white d-flex justify-center">
 
-    <!-- COMPONENTE EM POTENCIAL -->
-    <v-card v-for="list in lists">
-      <v-card-title> {{ list.title }} </v-card-title>
-      <v-card-subtitle> {{ list.id }} </v-card-subtitle>
-      <v-card-actions>
-        <v-btn color="blue" @click="RedirectDetailItem(list.id)">
-          DETALHE
-        </v-btn>
-        <v-btn color="blue" @click="openModalUpdateList(list.id, list.title)">
-          EDITAR
-        </v-btn>
-        <v-btn color="blue" @click="openModalDeleteItem(list.id, list.title)">
-          DELETAR
-        </v-btn>
-      </v-card-actions>
+      <!-- RESUMO -->
+      <v-btn color=black @click="HandleSummary" variant="plain"> RESUME </v-btn>
+    </div>
+
+    <!-- COMPONENTE QUE LISTA AS LISTAS -->
+    <div class="d-flex mx-auto justify-space-around w-75 flex-wrap">
+      <div v-for="list, index in lists">
+        <HomeList :imgPexel="this.imgArray[index]" :summaryInfos="this.summaryInfos" :list=list
+          @redict-to-detail="RedirectDetailItem" @modal-update-list="openModalUpdateList"
+          @modal-delete-item="openModalDeleteItem"></HomeList>
+      </div>
+    </div>
+
+    <!-- NEW LIST BTN -->
+    <v-card class="w-100 stick_btn d-flex justify-center" color="transparent">
+      <v-btn color="rgb(200, 200, 200, 0.7)" class="ma-2 rounded-md" @click="openNewList = true" variant="flat">
+        NOVA LISTA
+      </v-btn>
     </v-card>
 
-    <!-- CRIAR NOVA LISTA -->
-    <ModalNewList @new-list="createNewList" @close-modal="this.openNewList = false" v-if="openNewList"></ModalNewList>
+    <!-- NEW LIST MODAL -->
+    <ModalNewList @new-list="createNewList" @close="this.openNewList = false" v-if="openNewList"></ModalNewList>
 
-    <!-- MODAL DE EDITAR LISTA -->
+    <!-- UPDATE LIST MODAL -->
     <EditListTitle @new-name-list="handleEditNameList" @close-modal="this.showModalEditList = false"
       v-if="showModalEditList" :id="this.currenteId" :name="this.currentTitle"></EditListTitle>
 
@@ -162,12 +164,16 @@ export default {
     <Summary :summaryInfos="this.summaryInfos" @close-modal="this.showModalSummary = false" v-if="showModalSummary">
     </Summary>
 
+    <!-- DELETE MODAL -->
     <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
       @confirm-modal="handleDeleteItem"></alertDelete>
-
-
 
   </div>
 </template>
 
-<style></style>
+<style>
+.stick_btn {
+  position: sticky;
+  bottom: 0;
+}
+</style>
