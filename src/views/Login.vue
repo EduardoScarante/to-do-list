@@ -49,6 +49,7 @@ export default {
       }
 
       try{
+        this.loading = true
         const { data } = await this.login(payload)
         const { access_token } = data
         setupPrivateApi(access_token)
@@ -58,6 +59,8 @@ export default {
       } catch (err) {
         console.log(err);
         this.ErrorModal = true
+      } finally{
+        this.loading = false
       }
     },
     changeTab() {

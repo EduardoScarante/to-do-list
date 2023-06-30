@@ -3,7 +3,12 @@
 import imgRegister from '@/assets/imgs/register-img.jpg'
 import { authApiMixin } from '@/api/auth'
 
+import Error from '@/components/Error.vue'
+
 export default {
+    components:{
+        Error
+    },
     mixins: [authApiMixin],
     data: () => ({
         /* VARIAVEIS */
@@ -21,6 +26,9 @@ export default {
 
         /* IMG IMPORT */
         imgRegister,
+
+        /* ERROR MODAL */
+        ErrorModal: false,
 
 
         /* RULES */
@@ -66,13 +74,17 @@ export default {
                 password: this.password
             };
 
+            this.loading = true
             try {
+                console.log("try");
                 await this.register(data)
-                alert("Deu boa!")
+                this.$emit('user-created')
             } 
             catch (err) {
-                const status = err.response.status
-                alert(status + err)
+                console.log("catch");
+                console.log(err);
+                this.ErrorModal = true
+                this.loading = false
             }
         },
         changeTag() {
@@ -112,6 +124,8 @@ export default {
         <div class="h-100 d-flex justify-center align-center">
             <img :src="imgRegister" class="h-100" alt="">
         </div>
+
+        <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
 
     </div>
 </template>
