@@ -7,6 +7,7 @@ import modalDetail from "@/components/modal/detail-item.vue";
 import ModalNewList from "@/components/modal/new-item.vue";
 import Loading from "@/components/Loading.vue";
 import confirmDelete from "@/components/modal/alertDelete.vue";
+import ModalTasks from "@/components/ModalTasks.vue";
 
 export default {
   components: {
@@ -14,6 +15,7 @@ export default {
     ModalNewList,
     Loading,
     confirmDelete,
+    ModalTasks,
   },
   mixins: [listApiMixin, toDoItemsApiMixin, dateFormater],
   data() {
@@ -31,7 +33,8 @@ export default {
       showModalDelete: false,
       titleModalDelete: "",
 
-      showInfoTask: false
+      showInfoTask: false,
+      nameList: '',
     };
   },
   async mounted() {
@@ -44,6 +47,7 @@ export default {
       try {
         const { data } = await this.detailList(id);
         this.items = data.items;
+        this.nameList = data.title;
         this.loading = false;
       } catch {
         alert("Deu erro... D:");
@@ -51,17 +55,18 @@ export default {
       }
     },
 
-    handleResolveItem() {
-      this.handleWithResponse(
-        Promise.all(this.selected.map((el) => this.ResolveItem(el)))
-      );
-      this.selected = [];
+    newItem(title, deadline) {
+      const id = this.$route.params.id;
+      this.handleWithResponse(this.createItem(id, title, deadline));
+      this.showNewItemForm = false;
     },
 
-    async handleShowDetail(id) {
-      const res = await this.handleWithResponse(this.DetailItem(id));
-      this.itemDetailInfos = res.data;
-      this.showModalDetail = true;
+    handleResolveItem(id) {
+      /* this.handleWithResponse(
+        Promise.all(this.selected.map((el) => this.ResolveItem(el)))
+      ); */
+      this.handleWithResponse(this.ResolveItem(id))
+      this.selected = [];
     },
 
     handledOpenDeleteModal(id, title) {
@@ -75,11 +80,13 @@ export default {
 
     },
 
-    newItem(title, deadline) {
-      const id = this.$route.params.id;
-      this.handleWithResponse(this.createItem(id, title, deadline));
-      this.showNewItemForm = false;
+    async handleShowDetail(id) {
+      const res = await this.handleWithResponse(this.DetailItem(id));
+      this.itemDetailInfos = res.data;
+      this.showModalDetail = true;
     },
+
+
 
     /* FUNÇÂO QUE TRATA RETORNO DA API, RECEBE UMA PROMISSE E CONFORME RESULTADO EXECUTA AÇÂO */
     async handleWithResponse(promise) {
@@ -129,7 +136,7 @@ export default {
 
 
   <v-snackbar v-model="snackbar" color="green">
-    Não há tarefas abertas!
+    There are no open tasks in this list!
     <template v-slot:actions>
       <v-btn color="white" variant="tonal" @click="snackbar = false">
         Close
@@ -137,97 +144,17 @@ export default {
     </template>
   </v-snackbar>
 
-
-  <!-- 
-  <div v-for="item in organizeDeadlineDate(seeAllTasks)">
-    <v-row class="d-flex align-center ma-2 elevation-2 w-75 mx-auto" :class="bgColor(item.done)">
-      <v-col cols="3" :color="bgColor(item.done)">{{
-        formatDate(item.deadline)
-      }}</v-col>
-      <v-col cols="6">{{ item.title }}</v-col>
-      <v-col cols="1">
-        <v-checkbox class="d-flex" v-model="selected" :value="item.id" v-if="!item.done">
-        </v-checkbox>
-      </v-col>
-      <v-col cols="1">
-        <v-btn @click="handleShowDetail(item.id)">
-          <span class="material-symbols-outlined"> info </span>
-        </v-btn>
-      </v-col>
-      <v-col cols="1"><v-btn @click="handledOpenDeleteModal(item.id, item.title)">
-          <span class="material-symbols-outlined"> delete </span>
-        </v-btn>
-      </v-col>
-    </v-row>
-  </div> -->
-
-  <div class="d-flex justify-center" @click="handleResolveItem">
-    <v-btn :disabled="selected.length == 0" color="black" class="ma-2">
-      SALVAR
-    </v-btn>
+  <div class="w-75 mx-auto d-flex flex-column justify-center align-center elevation-0">
+    <div v-for="item in organizeDeadlineDate(seeAllTasks)">
+      <ModalTasks :item=item @delete-item="handledOpenDeleteModal" @resolve-item="handleResolveItem" @detail-item="handleShowDetail"></ModalTasks>
+    </div>
   </div>
 
-
-
-  <v-card class="w-75 mx-auto d-flex flex-wrap justify-center align-center elevation-0">
-    <div v-for="item in organizeDeadlineDate(seeAllTasks)">
-      <v-hover v-slot="{ isHovering, props }">
-
-        <v-card width="400" v-bind="props">
-          <v-img height="75"
-            src="https://images.pexels.com/photos/5717409/pexels-photo-5717409.jpeg?auto=compress&cs=tinysrgb&h=600" cover
-            class="text-white">
-            <v-toolbar height="75" color="rgba(0, 0, 0, 0.4)" theme="dark">
-
-              <v-toolbar-title class="text-h6">
-                {{ item.title }}
-              </v-toolbar-title>
-
-              <v-btn>DELETE</v-btn>
-              <v-btn>
-                <v-checkbox></v-checkbox>
-              </v-btn>
-            </v-toolbar>
-          </v-img>
-
-          <v-expand-transition>
-            <div v-show="isHovering">
-              <v-card-text>
-
-                <div class="font-weight-bold pa-2 mb-2 rounded-lg" :class="item.done == false ? 'bg-red' : 'bg-green'">{{
-                  item.done == true ? "Done! ;)" : "Not done :(" }}</div>
-
-                <v-timeline density="compact" align="start">
-                  <v-timeline-item dot-color="green" size="x-small" v-if="item.done">
-                    <b>Finished at</b>: {{ formatDateRes(item.updatedAt) }}
-                  </v-timeline-item>
-
-                  <v-timeline-item dot-color="red" size="x-small">
-                    <b>Deadline</b>: {{ formatDate(item.deadline) }}
-                  </v-timeline-item>
-
-                  <v-timeline-item dot-color="orange" size="x-small">
-                    <b>Open At:</b> {{ formatDateRes(item.createdAt) }}
-                  </v-timeline-item>
-                </v-timeline>
-              </v-card-text>
-            </div>
-          </v-expand-transition>
-
-        </v-card>
-      </v-hover>
-    </div>
-  </v-card>
-
-
-
-
-
   <!-- MODAL DE NOVO ITEM NA LISTA -->
-  <ModalNewList v-if="showNewItemForm" @new-item="newItem" @close-modal="this.showNewItemForm = false"></ModalNewList>
+  <ModalNewList v-if="showNewItemForm" @new-item="newItem" @close="this.showNewItemForm = false"></ModalNewList>
 
   <!-- MODAL DE DETALHE DO ITEM -->
-  <modalDetail v-if="showModalDetail" :infos="itemDetailInfos" @closeModal="this.showModalDetail = false"></modalDetail>
+  <modalDetail v-if="showModalDetail" :listName="nameList" :infos="itemDetailInfos" @closeModal="this.showModalDetail = false"></modalDetail>
 
   <!-- MODAL DE LOADING -->
   <Loading v-if="loading"></Loading>
@@ -236,6 +163,7 @@ export default {
   <confirmDelete v-if="showModalDelete" :title="titleModalDelete" @closed-modal="this.showModalDelete = false"
     @confirm-modal="handleDeleleItem">
   </confirmDelete>
+
 </template>
 
 <style>
