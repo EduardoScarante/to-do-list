@@ -13,6 +13,8 @@ import Summary from "@/components/Summary.vue";
 import alertDelete from "@/components/modal/alertDelete.vue";
 import HomeList from "@/components/HomeList.vue";
 
+import Error from '@/components/Error.vue';
+
 export default {
   components: {
     ModalNewList,
@@ -21,6 +23,7 @@ export default {
     Summary,
     alertDelete,
     HomeList,
+    Error,
   },
 
   mixins: [listApiMixin, toDoItemsApiMixin],
@@ -45,6 +48,8 @@ export default {
       showModalDelete: false,
 
       imgArray: [],
+
+      ErrorModal: false,
     }
   },
 
@@ -66,7 +71,7 @@ export default {
         this.lists = data;
         this.summaryInfos = res.data
       } catch (err) {
-        alert("Algo deu errado");
+        this.ErrorModal = false
       } finally {
         await this.pexels()
         this.loading = false
@@ -114,7 +119,7 @@ export default {
         this.loading = true
         return await promise
       } catch {
-        alert("Algo deu errado :(")
+        this.ErrorModal = true
       } finally {
         this.getLists()
         this.loading = false
@@ -123,7 +128,7 @@ export default {
 
     async pexels() {
       const client = createClient('Uq2SsQQ2ZAF1EClW9XKOVxmGSZ54nq9JbinaEj1ggHAywYFj8qPggJKd');
-      const topicList = ['Academia' ,'to-do list', 'Montain', 'Nature', 'tree', 'office', 'rain'];
+      const topicList = ['Academia' ,'to-do list', 'Sunshine', 'Sunrise', 'tree', 'office', 'house'];
       const query = topicList[(Math.floor(Math.random()*topicList.length))];
       const { photos } = await client.photos.search({ query, per_page: this.lists.length }).then(photos => photos)
       this.imgArray = photos.map(el => el.src.portrait)
@@ -178,6 +183,9 @@ export default {
     <!-- DELETE MODAL -->
     <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
       @confirm-modal="handleDeleteItem"></alertDelete>
+
+      <!-- MODAL DE ERRO -->
+      <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
 
   </div>
 </template>

@@ -4,17 +4,23 @@ import imgLogin from '@/assets/imgs/login-img.jpg'
 import { authApiMixin } from '@/api/auth'
 import { setupPrivateApi } from '@/api';
 
+import Error from '@/components/Error.vue';
 
 export default {
   mixins: [authApiMixin],
+  components:{
+    Error
+  },
   data: () => ({
     email: 'eduardo@mail.com',
-    password: '1234',
+    password: '123456789#',
     isInvalidInfos: '',
     loading: false,
     showPass: false,
 
     imgLogin,
+
+    ErrorModal: false,
 
     emailRules: [
       value => {
@@ -51,7 +57,7 @@ export default {
         this.$router.push("app")
       } catch (err) {
         console.log(err);
-        alert("erro")
+        this.ErrorModal = true
       }
     },
     changeTab() {
@@ -67,7 +73,7 @@ export default {
 <template>
   <div class="container d-flex">
 
-    <div class="w-100 d-flex justify-center align-center">
+    <div class="h-100 d-flex justify-center align-center">
       <img :src="imgLogin" class="h-100" alt="">
     </div>
 
@@ -96,6 +102,8 @@ export default {
 
 
     </v-sheet>
+
+    <Error v-if="ErrorModal" @close="this.ErrorModal = false"></Error>
   </div>
 </template>
 

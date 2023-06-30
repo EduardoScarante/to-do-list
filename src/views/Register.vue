@@ -109,7 +109,7 @@ export default {
             <button class="pt-10 text-grey" @click="changeTag">Already have an account?</button>
         </v-sheet>
 
-        <div class="w-100 d-flex justify-center align-center">
+        <div class="h-100 d-flex justify-center align-center">
             <img :src="imgRegister" class="h-100" alt="">
         </div>
 

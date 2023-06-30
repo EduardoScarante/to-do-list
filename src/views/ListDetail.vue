@@ -9,6 +9,8 @@ import Loading from "@/components/Loading.vue";
 import confirmDelete from "@/components/modal/alertDelete.vue";
 import ModalTasks from "@/components/ModalTasks.vue";
 
+import Error from "@/components/Error.vue";
+
 export default {
   components: {
     modalDetail,
@@ -16,6 +18,7 @@ export default {
     Loading,
     confirmDelete,
     ModalTasks,
+    Error,
   },
   mixins: [listApiMixin, toDoItemsApiMixin, dateFormater],
   data() {
@@ -35,6 +38,8 @@ export default {
 
       showInfoTask: false,
       nameList: '',
+
+      ErrorModal: false,
     };
   },
   async mounted() {
@@ -50,7 +55,7 @@ export default {
         this.nameList = data.title;
         this.loading = false;
       } catch {
-        alert("Deu erro... D:");
+        this.ErrorModal = true
         this.loading = false;
       }
     },
@@ -94,7 +99,7 @@ export default {
         this.loading = true;
         return await promise;
       } catch {
-        alert("Deu erro");
+        this.ErrorModal = true
       } finally {
         this.getItems();
         this.loading = false;
@@ -163,6 +168,8 @@ export default {
   <confirmDelete v-if="showModalDelete" :title="titleModalDelete" @closed-modal="this.showModalDelete = false"
     @confirm-modal="handleDeleleItem">
   </confirmDelete>
+
+  <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
 
 </template>
 
