@@ -1,6 +1,6 @@
 <template>
     <v-card class="loading d-flex align-center justify-center">
-        <v-progress-circular indeterminate color="amber"></v-progress-circular>
+        <v-progress-circular indeterminate color="primary" size="70"></v-progress-circular>
     </v-card>
 </template>
 
