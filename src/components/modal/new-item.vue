@@ -13,6 +13,9 @@ export default {
             const formatedDate = `${this.deadLineDate}T${this.deadLineHour}:00.000Z`
             this.$emit('new-item', this.itemName, formatedDate)
         },
+        closeModal(){
+            this.$emit('close')
+        }
     },
     
     }
@@ -22,11 +25,17 @@ export default {
 <template>
     <v-card color="rgba(0, 0, 0, 0.5)" class="modal d-flex align-center justify-center">
         <v-card class="w-25 pa-4">
-            <v-card-title>Nome da Tarefa</v-card-title>
-            <v-text-field v-model="itemName"></v-text-field>
-            <v-text-field v-model="deadLineDate" type="date" :value="deadLineDate"></v-text-field>
-            <v-text-field v-model="deadLineHour" type="time" :value="deadLineHour"></v-text-field>
-            <v-btn @click="handleCreateList">Criar</v-btn>
+            <v-text-field label="Task Name" v-model="itemName"></v-text-field>
+            <v-text-field label="What Date?" v-model="deadLineDate" type="date" :value="deadLineDate"></v-text-field>
+            <v-text-field label="What Hour?" v-model="deadLineHour" type="time" :value="deadLineHour"></v-text-field>
+            <v-action class="d-flex justify-center">
+                <v-btn @click="closeModal" class="w-25 mx-2">
+                    Close
+                </v-btn>
+                <v-btn @click="handleCreateList" class="w-25 mx-2">
+                    Create
+                </v-btn>
+            </v-action>
         </v-card>
     </v-card>
 </template>

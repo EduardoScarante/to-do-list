@@ -16,11 +16,11 @@ export default {
 
 <template>
   <div class="modal">
-    <div class="confirm">
-      <p>Deseja excluir o item: {{ title[1] }}?</p>
+    <div class="confirm pa-2">
+      <p>Are you sure you want to delete the item: <b>{{ title[1] }}</b>?</p>
       <div>
-        <v-btn @click="confirm"> CONFIRMAR </v-btn>
-        <v-btn @click="closed"> CANCELAR </v-btn>
+        <v-btn @click="closed"> Cancel </v-btn>
+        <v-btn @click="confirm"> Confirm </v-btn>
       </div>
     </div>
   </div>
@@ -42,8 +42,9 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  height: 100px;
-  width: 400px;
+  height: 150px;
+  width: 500px;
+  border-radius: 10px;
   background-color: white;
 }
 </style>

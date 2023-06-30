@@ -30,25 +30,25 @@ export default {
                     <span class="material-symbols-outlined text-orange mr-4">
                         info
                     </span>
-                    Total de tarefas: {{ formatInfo[1] }}
+                    Total tasks: {{ formatInfo[1] }}
                 </p>
                 <p class="ma-4 d-flex">
                     <span class="material-symbols-outlined text-green mr-4">
                         done
                     </span>
-                    Total de tarefas concluidas: {{ formatInfo[0] }}</p>
+                    Total completed tasks: {{ formatInfo[0] }}</p>
 
                 <p class="ma-4 d-flex">
                     <span class="material-symbols-outlined text-red mr-4">
                         warning
                     </span>
-                    Total de tarefas em aberto: {{ formatInfo[1] - formatInfo[0] }}
+                    Total open tasks: {{ formatInfo[1] - formatInfo[0] }}
                 </p>
             </div>
 
             <v-card-actions>
                 <v-btn class="elevation-2 mx-auto" @click="closeModal">
-                    Fechar
+                    Close
                 </v-btn>
             </v-card-actions>
         </v-card>

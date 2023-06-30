@@ -33,11 +33,11 @@ export default {
             <v-card-title>new list name</v-card-title>
             <v-text-field :label="name" v-model="newNameList" placeholder="Novo Nome" :rules="inputRule"></v-text-field>
             <v-action class="d-flex justify-center">
-                <v-btn @click="handleUpdateListName" class="w-25 mx-2">
-                    Atualizar
-                </v-btn>
                 <v-btn @click="closeModal" class="w-25 mx-2">
-                    Fechar
+                    Close
+                </v-btn>
+                <v-btn @click="handleUpdateListName" class="w-25 mx-2">
+                    Update
                 </v-btn>
             </v-action>
         </v-card>

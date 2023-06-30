@@ -40,8 +40,8 @@ export default {
             </v-img>
 
             <v-card-text>
-                <v-card-subtitle>Itens abertos dessa lista: {{ itens[1] }}</v-card-subtitle>
-                <v-card-subtitle>Itens concluidos dessa lista: {{ itens[0] }}</v-card-subtitle>
+                <v-card-subtitle>Open items from this list: {{ itens[1] }}</v-card-subtitle>
+                <v-card-subtitle>Items completed from this list: {{ itens[0] }}</v-card-subtitle>
             </v-card-text>
 
             <v-card-actions class="d-flex justify-space-around">
