@@ -59,7 +59,7 @@ export default {
       </v-card-text>
     </v-card>
 
-    <router-view />
+    <router-view @user-created="handleAlertModal"/>
   </v-app>
 </template>
 
