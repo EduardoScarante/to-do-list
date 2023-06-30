@@ -15,8 +15,8 @@ export default {
 </script>
 
 <template>
-  <div class="modal">
-    <div class="confirm pa-2">
+  <div class="modal h-100 w-100 d-flex align-center justify-center">
+    <div class="d-flex flex-column align-center justify-space-between w-25 rounded-lg pa-2 bg-white">
       <p>Are you sure you want to delete the item: <b>{{ title[1] }}</b>?</p>
       <div>
         <v-btn @click="closed"> Cancel </v-btn>
@@ -28,23 +28,8 @@ export default {
 <style scoped>
 .modal {
   position: fixed;
+  background-color: rgb(0, 0, 0, 0.3);
   top: 0;
   right: 0;
-  height: 100vh;
-  width: 100vw;
-  background-color: rgb(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.confirm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  height: 150px;
-  width: 500px;
-  border-radius: 10px;
-  background-color: white;
 }
 </style>

@@ -36,7 +36,7 @@ export default {
                 </v-toolbar-title>
 
 
-                <v-btn variant="tonal mx-2" @click="ResolveItem()" v-if="item.done">SOLVE</v-btn>
+                <v-btn variant="tonal mx-2" @click="ResolveItem()" v-if="!item.done">SOLVE</v-btn>
                 <v-btn variant="tonal mx-2" @click="deleteItem()">DELETE</v-btn>
                 <v-btn variant="tonal mx-2" @click=detailPage()>SEE MORE</v-btn>
             </v-toolbar>
@@ -46,7 +46,7 @@ export default {
             <v-expansion-panel>
                 <v-expansion-panel-title>
                     <v-icon :icon="item.done == true ? 'mdi-check' : 'mdi-close'" :color="item.done == true ? 'green' : 'red'"/> 
-                    <p class="ml-3">{{ item.done == true ? 'Done ;)' : 'Not done :(' }}</p>
+                    <p class="ml-3">{{ item.done == true ? 'Done' : 'Not done' }}</p>
                     
                     <template v-slot:actions="{ expanded }">
                         <v-icon :color="!expanded ? 'grey' : ''" :icon="!expanded ? 'mdi-menu-down' : 'mdi-minus'"></v-icon>
@@ -64,7 +64,7 @@ export default {
                             <b>Deadline</b>: {{ formatDate(item.deadline) }}
                         </v-timeline-item>
 
-                        <v-timeline-item dot-color="blue" size="x-small">
+                        <v-timeline-item dot-color="orange" size="x-small">
                             <b>Open At:</b> {{ formatDateRes(item.createdAt) }}
                         </v-timeline-item>
                     </v-timeline>
