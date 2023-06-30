@@ -30,6 +30,8 @@ export default {
       seeAllTasks: "",
       showModalDelete: false,
       titleModalDelete: "",
+
+      showInfoTask: false
     };
   },
   async mounted() {
@@ -61,6 +63,7 @@ export default {
       this.itemDetailInfos = res.data;
       this.showModalDetail = true;
     },
+
     handledOpenDeleteModal(id, title) {
       this.titleModalDelete = [id, title];
       this.showModalDelete = true;
@@ -135,7 +138,7 @@ export default {
   </v-snackbar>
 
 
-
+  <!-- 
   <div v-for="item in organizeDeadlineDate(seeAllTasks)">
     <v-row class="d-flex align-center ma-2 elevation-2 w-75 mx-auto" :class="bgColor(item.done)">
       <v-col cols="3" :color="bgColor(item.done)">{{
@@ -156,13 +159,69 @@ export default {
         </v-btn>
       </v-col>
     </v-row>
-  </div>
+  </div> -->
 
   <div class="d-flex justify-center" @click="handleResolveItem">
     <v-btn :disabled="selected.length == 0" color="black" class="ma-2">
       SALVAR
     </v-btn>
   </div>
+
+
+
+  <v-card class="w-75 mx-auto d-flex flex-wrap justify-center align-center elevation-0">
+    <div v-for="item in organizeDeadlineDate(seeAllTasks)">
+      <v-hover v-slot="{ isHovering, props }">
+
+        <v-card width="400" v-bind="props">
+          <v-img height="75"
+            src="https://images.pexels.com/photos/5717409/pexels-photo-5717409.jpeg?auto=compress&cs=tinysrgb&h=600" cover
+            class="text-white">
+            <v-toolbar height="75" color="rgba(0, 0, 0, 0.4)" theme="dark">
+
+              <v-toolbar-title class="text-h6">
+                {{ item.title }}
+              </v-toolbar-title>
+
+              <v-btn>DELETE</v-btn>
+              <v-btn>
+                <v-checkbox></v-checkbox>
+              </v-btn>
+            </v-toolbar>
+          </v-img>
+
+          <v-expand-transition>
+            <div v-show="isHovering">
+              <v-card-text>
+
+                <div class="font-weight-bold pa-2 mb-2 rounded-lg" :class="item.done == false ? 'bg-red' : 'bg-green'">{{
+                  item.done == true ? "Done! ;)" : "Not done :(" }}</div>
+
+                <v-timeline density="compact" align="start">
+                  <v-timeline-item dot-color="green" size="x-small" v-if="item.done">
+                    <b>Finished at</b>: {{ formatDateRes(item.updatedAt) }}
+                  </v-timeline-item>
+
+                  <v-timeline-item dot-color="red" size="x-small">
+                    <b>Deadline</b>: {{ formatDate(item.deadline) }}
+                  </v-timeline-item>
+
+                  <v-timeline-item dot-color="orange" size="x-small">
+                    <b>Open At:</b> {{ formatDateRes(item.createdAt) }}
+                  </v-timeline-item>
+                </v-timeline>
+              </v-card-text>
+            </div>
+          </v-expand-transition>
+
+        </v-card>
+      </v-hover>
+    </div>
+  </v-card>
+
+
+
+
 
   <!-- MODAL DE NOVO ITEM NA LISTA -->
   <ModalNewList v-if="showNewItemForm" @new-item="newItem" @close-modal="this.showNewItemForm = false"></ModalNewList>
