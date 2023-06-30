@@ -110,7 +110,7 @@ export default {
     },
 
     RedirectDetailItem(id) {
-      this.$router.push(`/app/${id}`)
+      this.$router.push(`/${id}`)
     },
 
     /* FUNÇÂO QUE TRATA RETORNO DA API */
@@ -184,9 +184,7 @@ export default {
     <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
       @confirm-modal="handleDeleteItem"></alertDelete>
 
-      <!-- MODAL DE ERRO -->
       <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
-
   </div>
 </template>
 
