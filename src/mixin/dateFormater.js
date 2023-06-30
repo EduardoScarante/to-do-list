@@ -3,7 +3,7 @@ export const dateFormater = {
         formatDate(date) {
             const pureDate = date.split("T")[0].split("-").reverse().join("/")
             const pureHour = date.split("T")[1].split(".")[0]
-            return `${pureDate} - ${pureHour}`
+            return `${pureDate} - ${pureHour.split(":")[0]}h${pureHour.split(":")[1]}`
         },
         formatDateRes(date) {
             const pureDate = date.split("T")[0].split("-").reverse().join("/")
@@ -11,7 +11,7 @@ export const dateFormater = {
             const hour = pureHour.split(":")[0]-3
             const min = pureHour.split(":")[1]
             const sec = pureHour.split(":")[2]
-            return `${pureDate} - ${hour}:${min}:${sec}`
+            return `${pureDate} - ${hour}h${min}`
         },
     }
 }
