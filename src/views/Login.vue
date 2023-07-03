@@ -13,7 +13,7 @@ export default {
   },
   data: () => ({
     email: 'eduardo@mail.com',
-    password: '123456789#',
+    password: '1234',
     isInvalidInfos: '',
     loading: false,
     showPass: false,
@@ -21,6 +21,7 @@ export default {
     imgLogin,
 
     ErrorModal: false,
+    errorMessage: '',
 
     emailRules: [
       value => {
@@ -58,6 +59,7 @@ export default {
         this.$router.push("app")
       } catch (err) {
         console.log(err);
+        this.errorMessage = err.response.data.message
         this.ErrorModal = true
       } finally{
         this.loading = false
@@ -106,7 +108,7 @@ export default {
 
     </v-sheet>
 
-    <Error v-if="ErrorModal" @close="this.ErrorModal = false"></Error>
+    <Error v-if="ErrorModal" :error="errorMessage" @close="this.ErrorModal = false"></Error>
   </div>
 </template>
 
