@@ -4,6 +4,7 @@ import { createClient } from 'pexels';
 
 import { listApiMixin } from "@/api/todolists";
 import { toDoItemsApiMixin } from "@/api/todoitems"
+import { userInfo } from '@/api/userinfo'
 
 import ModalNewList from '@/components/modal/new-list.vue'
 import EditListTitle from "@/components/modal/edit-name-list.vue";
@@ -26,7 +27,7 @@ export default {
     Error,
   },
 
-  mixins: [listApiMixin, toDoItemsApiMixin],
+  mixins: [listApiMixin, toDoItemsApiMixin, userInfo],
 
   data() {
     return {
@@ -40,9 +41,10 @@ export default {
       currenteId: "",
       currentTitle: "",
 
-      loading: false,
+      loading: true,
       showModalSummary: false,
       summaryInfos: '',
+      userInfo: '',
 
       modalDeleteInfos: [],
       showModalDelete: false,
@@ -60,8 +62,8 @@ export default {
       localStorage.removeItem("access_token")
       location.replace("/");
     },
-    
-    redirectToGitHub(){
+
+    redirectToGitHub() {
       window.open('https://github.com/EduardoScarante/to-do-list', '_blank')
     },
 
@@ -69,9 +71,12 @@ export default {
       this.loading = true
       try {
         const { data } = await this.list();
-        const res = await this.GetAllItens()
+        const res = await this.GetAllItens();
+        const resUser = await this.getUser();
+
         this.lists = data;
         this.summaryInfos = res.data
+        this.userInfo = resUser.data
       } catch (err) {
         this.ErrorModal = false
         this.errorMessage = err.response.data.message
@@ -121,7 +126,7 @@ export default {
       try {
         this.loading = true
         return await promise
-      } catch(err) {
+      } catch (err) {
         this.errorMessage = err.response.data.message
         this.ErrorModal = true
       } finally {
@@ -132,8 +137,8 @@ export default {
 
     async pexels() {
       const client = createClient(import.meta.env.VITE_PEXELS);
-      const topicList = ['Academia' ,'to-do list', 'Sunshine', 'Sunrise', 'tree', 'office', 'house'];
-      const query = topicList[(Math.floor(Math.random()*topicList.length))];
+      const topicList = ['Academia', 'to-do list', 'Sunshine', 'Sunrise', 'tree', 'office', 'house'];
+      const query = topicList[(Math.floor(Math.random() * topicList.length))];
       const { photos } = await client.photos.search({ query, per_page: this.lists.length }).then(photos => photos)
       this.imgArray = photos.map(el => el.src.portrait)
     }
@@ -164,6 +169,10 @@ export default {
       </div>
     </div>
 
+    <v-alert v-if="lists.length == 0" type="info" title="No list yet" class="w-75 mx-auto" closable
+      text="Create a to-do list by clicking the button below!" variant="tonal">
+    </v-alert>
+
     <!-- NEW LIST BTN -->
     <v-card class="w-100 stick_btn d-flex justify-center elevation-0" color="transparent">
       <v-btn color="rgb(200, 200, 200, 0.7)" class="ma-2 rounded-md" @click="openNewList = true" variant="flat">
@@ -181,14 +190,14 @@ export default {
     <!-- LOADING MODAL -->
     <Loading v-if="loading"></Loading>
 
-    <Summary :summaryInfos="this.summaryInfos" @close-modal="this.showModalSummary = false" v-if="showModalSummary">
+    <Summary :summaryInfos="this.summaryInfos" :userInfo="userInfo" @close-modal="this.showModalSummary = false" v-if="showModalSummary">
     </Summary>
 
     <!-- DELETE MODAL -->
     <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
       @confirm-modal="handleDeleteItem"></alertDelete>
 
-      <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
+    <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
   </div>
 </template>
 

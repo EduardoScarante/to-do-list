@@ -3,6 +3,7 @@
 export default {
     props: {
         summaryInfos: Array,
+        userInfo: Array,
     },
     methods: {
         closeModal() {
@@ -22,8 +23,16 @@ export default {
 
 <template>
     <v-card color="rgba(0, 0, 0, 0.5)" class="modal d-flex align-center justify-center">
-        <v-card class="pa-4">
-            <h3>Summary</h3>
+        <v-card class="pa-4 w-50">
+
+            <v-card class="elevation-0">
+                <v-card-title>Hello {{userInfo.username}} !</v-card-title>
+                <v-card-subtitle><i>{{ userInfo.email }}</i></v-card-subtitle>
+                <v-card-subtitle><i>{{ userInfo.id }}</i></v-card-subtitle>
+                <v-card-text><b>here is a summary of your activities:</b></v-card-text>
+            </v-card>
+            
+            <v-divider></v-divider>
 
             <div>
                 <p class="ma-4 d-flex">
