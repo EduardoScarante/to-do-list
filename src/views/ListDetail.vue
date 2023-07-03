@@ -29,7 +29,6 @@ export default {
       showNewItemForm: false,
 
       loading: false,
-      snackbar: false,
 
       selected: [],
       seeAllTasks: "",
@@ -56,7 +55,7 @@ export default {
         this.items = data.items;
         this.nameList = data.title;
         this.loading = false;
-      } catch(err) {
+      } catch (err) {
         this.loading = false;
         this.errorMessage = err.response.data.message
         this.ErrorModal = true
@@ -101,7 +100,7 @@ export default {
       try {
         this.loading = true;
         return await promise;
-      } catch(err) {
+      } catch (err) {
         this.ErrorModal = true
         this.errorMessage = err.response.data.message
       } finally {
@@ -125,7 +124,6 @@ export default {
       const done = ordened.filter((elemento) => elemento.done == true);
 
       if (state) return undone.concat(done);
-      if (undone.length == 0) this.snackbar = true;
       return undone;
     },
   },
@@ -135,7 +133,11 @@ export default {
 <template>
   <div class="w-100 bg-white d-flex justify-space-between">
 
-    <v-btn color=black @click="this.$router.go(-1)" variant="plain"> TO DO LIST </v-btn>
+    <v-btn color=black @click="this.$router.go(-1)" variant="plain">
+      <span class="material-symbols-outlined">
+        arrow_back
+      </span>
+    </v-btn>
     <v-btn color=black @click="showNewItemForm = true" variant="plain"> NEW ITEM </v-btn>
     <div class="d-flex flex-row justify-center align-center">
       <h5>SEE ALL TASKS:</h5>
@@ -143,19 +145,14 @@ export default {
     </div>
   </div>
 
-
-  <v-snackbar v-model="snackbar" color="green">
-    There are no open tasks in this list!
-    <template v-slot:actions>
-      <v-btn color="white" variant="tonal" @click="snackbar = false">
-        Close
-      </v-btn>
-    </template>
-  </v-snackbar>
+  <v-alert v-if="organizeDeadlineDate().length == 0" type="success" title="Congrats!" class="w-75 mx-auto" closable
+    text="There are no open tasks in this list!" variant="tonal">
+  </v-alert>
 
   <div class="w-75 mx-auto d-flex flex-column justify-center align-center elevation-0">
     <div v-for="item in organizeDeadlineDate(seeAllTasks)">
-      <ModalTasks :item=item @delete-item="handledOpenDeleteModal" @resolve-item="handleResolveItem" @detail-item="handleShowDetail"></ModalTasks>
+      <ModalTasks :item=item @delete-item="handledOpenDeleteModal" @resolve-item="handleResolveItem"
+        @detail-item="handleShowDetail"></ModalTasks>
     </div>
   </div>
 
@@ -163,7 +160,8 @@ export default {
   <ModalNewList v-if="showNewItemForm" @new-item="newItem" @close="this.showNewItemForm = false"></ModalNewList>
 
   <!-- MODAL DE DETALHE DO ITEM -->
-  <modalDetail v-if="showModalDetail" :listName="nameList" :infos="itemDetailInfos" @closeModal="this.showModalDetail = false"></modalDetail>
+  <modalDetail v-if="showModalDetail" :listName="nameList" :infos="itemDetailInfos"
+    @closeModal="this.showModalDetail = false"></modalDetail>
 
   <!-- MODAL DE LOADING -->
   <Loading v-if="loading"></Loading>
@@ -174,7 +172,6 @@ export default {
   </confirmDelete>
 
   <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
-
 </template>
 
 <style>
