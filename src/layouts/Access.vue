@@ -40,10 +40,6 @@ export default {
     <!--  -->
 
     <v-card width="1000" height="auto" class="d-flex align-center ma-auto bg-white elevation-20 rounded-lg">
-      <!--       <v-tabs v-model="tab">
-        <v-tab value="one" class="w-50">Login</v-tab>
-        <v-tab value="two" class="w-50">Register</v-tab>
-      </v-tabs> -->
 
       <v-card-text class="pa-0">
         <v-window v-model="tab">
@@ -52,14 +48,14 @@ export default {
           </v-window-item>
 
           <v-window-item value="two">
-            <Register v-on:changeTag="toogleTab" v-on:openModelSucess="handleAlertModal" />
+            <Register v-on:changeTag="toogleTab" v-on:openModelSucess="handleAlertModal" @user-created="handleAlertModal"/>
           </v-window-item>
 
         </v-window>
       </v-card-text>
     </v-card>
 
-    <router-view @user-created="handleAlertModal"/>
+    <router-view/>
   </v-app>
 </template>
 
