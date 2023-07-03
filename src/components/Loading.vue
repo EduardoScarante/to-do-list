@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-    <v-card class="loading d-flex align-center justify-center bg-white flex-column">
+    <v-card class="loading d-flex align-center justify-center flex-column">
         <lottie-player :src="loading" background="transparent" speed="1" style="height: 300px" loop
             autoplay></lottie-player>
     </v-card>
