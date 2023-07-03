@@ -12,10 +12,10 @@ export default {
     mixins: [authApiMixin],
     data: () => ({
         /* VARIAVEIS */
-        username: 'eduardo',
-        email: 'eduardo@mail.com',
-        password: '123456@12',
-        confirmPassword: '123456@12',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
         isInvalidInfos: '',
 
         showPass: false,
@@ -127,6 +127,7 @@ export default {
         </div>
 
         <Error v-if="ErrorModal" @close="ErrorModal = false" :error="errorMessage"></Error>
+
 
     </div>
 </template>
