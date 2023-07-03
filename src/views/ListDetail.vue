@@ -40,6 +40,8 @@ export default {
       nameList: '',
 
       ErrorModal: false,
+      errorMessage: '',
+
     };
   },
   async mounted() {
@@ -54,9 +56,10 @@ export default {
         this.items = data.items;
         this.nameList = data.title;
         this.loading = false;
-      } catch {
-        this.ErrorModal = true
+      } catch(err) {
         this.loading = false;
+        this.errorMessage = err.response.data.message
+        this.ErrorModal = true
       }
     },
 
@@ -98,8 +101,9 @@ export default {
       try {
         this.loading = true;
         return await promise;
-      } catch {
+      } catch(err) {
         this.ErrorModal = true
+        this.errorMessage = err.response.data.message
       } finally {
         this.getItems();
         this.loading = false;
@@ -169,7 +173,7 @@ export default {
     @confirm-modal="handleDeleleItem">
   </confirmDelete>
 
-  <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
+  <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
 
 </template>
 

@@ -50,6 +50,8 @@ export default {
       imgArray: [],
 
       ErrorModal: false,
+      errorMessage: '',
+
     }
   },
 
@@ -72,6 +74,7 @@ export default {
         this.summaryInfos = res.data
       } catch (err) {
         this.ErrorModal = false
+        this.errorMessage = err.response.data.message
       } finally {
         await this.pexels()
         this.loading = false
@@ -118,7 +121,8 @@ export default {
       try {
         this.loading = true
         return await promise
-      } catch {
+      } catch(err) {
+        this.errorMessage = err.response.data.message
         this.ErrorModal = true
       } finally {
         this.getLists()
@@ -127,7 +131,7 @@ export default {
     },
 
     async pexels() {
-      const client = createClient('Uq2SsQQ2ZAF1EClW9XKOVxmGSZ54nq9JbinaEj1ggHAywYFj8qPggJKd');
+      const client = createClient(import.meta.env.VITE_PEXELS);
       const topicList = ['Academia' ,'to-do list', 'Sunshine', 'Sunrise', 'tree', 'office', 'house'];
       const query = topicList[(Math.floor(Math.random()*topicList.length))];
       const { photos } = await client.photos.search({ query, per_page: this.lists.length }).then(photos => photos)
@@ -184,7 +188,7 @@ export default {
     <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
       @confirm-modal="handleDeleteItem"></alertDelete>
 
-      <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
+      <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
   </div>
 </template>
 

@@ -6,16 +6,16 @@ import { authApiMixin } from '@/api/auth'
 import Error from '@/components/Error.vue'
 
 export default {
-    components:{
+    components: {
         Error
     },
     mixins: [authApiMixin],
     data: () => ({
         /* VARIAVEIS */
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        username: 'eduardo',
+        email: 'eduardo@mail.com',
+        password: '123456@12',
+        confirmPassword: '123456@12',
         isInvalidInfos: '',
 
         showPass: false,
@@ -29,6 +29,7 @@ export default {
 
         /* ERROR MODAL */
         ErrorModal: false,
+        errorMessage: '',
 
 
         /* RULES */
@@ -76,15 +77,15 @@ export default {
 
             this.loading = true
             try {
-                console.log("try");
                 await this.register(data)
                 this.$emit('user-created')
-            } 
+            }
             catch (err) {
-                console.log("catch");
-                console.log(err);
+                this.errorMessage = err.response.data.message
                 this.ErrorModal = true
+            } finally {
                 this.loading = false
+                this.changeTag
             }
         },
         changeTag() {
@@ -125,7 +126,7 @@ export default {
             <img :src="imgRegister" class="h-100" alt="">
         </div>
 
-        <Error v-if="ErrorModal" @close="ErrorModal = false"></Error>
+        <Error v-if="ErrorModal" @close="ErrorModal = false" :error="errorMessage"></Error>
 
     </div>
 </template>
