@@ -135,17 +135,34 @@ export default {
 <template>
   <div class="w-100 bg-white d-flex justify-space-between">
 
-    <v-btn color=black @click="this.$router.go(-1)" variant="plain">
-      <span class="material-symbols-outlined">
-        arrow_back
-      </span>
-    </v-btn>
-    <v-btn color=black @click="showNewItemForm = true" variant="plain"> NEW ITEM </v-btn>
-    <div class="d-flex flex-row justify-center align-center">
-      <h5>SEE ALL TASKS:</h5>
-      <v-checkbox v-model="seeAllTasks" class="d-flex" />
-    </div>
+    <v-row>
+      <v-col cols="4">
+        <v-btn color=black @click="this.$router.go(-1)" variant="plain">
+          <span class="material-symbols-outlined">
+            arrow_back
+          </span>
+        </v-btn>
+      </v-col>
+
+      <v-col cols="4" class="d-flex justify-center">
+        <v-btn color=black @click="showNewItemForm = true" variant="plain"> NEW ITEM </v-btn>
+      </v-col>
+
+
+      <v-col cols="4" class="d-flex justify-end">
+        <div class="d-flex flex-row justify-center align-center">
+          <h5>SEE ALL TASKS:</h5>
+          <v-checkbox v-model="seeAllTasks" class="d-flex" />
+        </div>
+      </v-col>
+    </v-row>
   </div>
+
+  <v-card>
+    <v-card-title class="elevation-0 d-flex justify-center">
+      {{ nameList }}
+    </v-card-title>
+  </v-card>
 
   <v-alert v-if="organizeDeadlineDate().length == 0" type="success" title="Congrats!" class="w-75 mx-auto" closable
     text="There are no open tasks in this list!" variant="tonal">
