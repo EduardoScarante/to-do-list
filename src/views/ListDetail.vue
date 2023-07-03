@@ -59,6 +59,8 @@ export default {
         this.loading = false;
         this.errorMessage = err.response.data.message
         this.ErrorModal = true
+      } finally {
+        this.loading = false
       }
     },
 
@@ -101,11 +103,11 @@ export default {
         this.loading = true;
         return await promise;
       } catch (err) {
+        this.loading = false
         this.ErrorModal = true
         this.errorMessage = err.response.data.message
       } finally {
         this.getItems();
-        this.loading = false;
       }
     },
 

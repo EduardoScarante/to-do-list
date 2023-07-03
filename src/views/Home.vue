@@ -97,7 +97,7 @@ export default {
     },
 
     async handleDeleteItem(id) {
-      this.showModalDeleteInfos = false;
+      this.showModalDelete = false;
       this.handleWithResponse(this.deleteList(id));
     },
 
@@ -122,11 +122,11 @@ export default {
         this.loading = true;
         return await promise;
       } catch (err) {
+        this.loading = false
         this.errorMessage = err.response.data.message;
         this.ErrorModal = true;
       } finally {
         this.getLists();
-        this.loading = false;
       }
     },
 
@@ -151,7 +151,7 @@ export default {
           },
         }
       );
-      const { photos } = await res.json(); 
+      const { photos } = await res.json();
       this.imgArray = photos.map(el => el.src.portrait)
 
       return
@@ -178,83 +178,42 @@ export default {
     <!-- COMPONENTE QUE LISTA AS LISTAS -->
     <div class="d-flex mx-auto justify-space-around w-75 flex-wrap">
       <div v-for="(list, index) in lists">
-        <HomeList
-          :imgPexel="this.imgArray[index]"
-          :summaryInfos="this.summaryInfos"
-          :list="list"
-          @redict-to-detail="RedirectDetailItem"
-          @modal-update-list="openModalUpdateList"
-          @modal-delete-item="openModalDeleteItem"
-        ></HomeList>
+        <HomeList :imgPexel="this.imgArray[index]" :summaryInfos="this.summaryInfos" :list="list"
+          @redict-to-detail="RedirectDetailItem" @modal-update-list="openModalUpdateList"
+          @modal-delete-item="openModalDeleteItem"></HomeList>
       </div>
     </div>
 
-    <v-alert
-      v-if="lists.length == 0"
-      type="info"
-      title="No list yet"
-      class="w-75 mx-auto"
-      closable
-      text="Create a to-do list by clicking the button below!"
-      variant="tonal"
-    >
+    <v-alert v-if="lists.length == 0" type="info" title="No list yet" class="w-75 mx-auto" closable
+      text="Create a to-do list by clicking the button below!" variant="tonal">
     </v-alert>
 
     <!-- NEW LIST BTN -->
-    <v-card
-      class="w-100 stick_btn d-flex justify-center elevation-0"
-      color="transparent"
-    >
-      <v-btn
-        color="rgb(200, 200, 200, 0.7)"
-        class="ma-2 rounded-md"
-        @click="openNewList = true"
-        variant="flat"
-      >
+    <v-card class="w-100 stick_btn d-flex justify-center elevation-0" color="transparent">
+      <v-btn color="rgb(200, 200, 200, 0.7)" class="ma-2 rounded-md" @click="openNewList = true" variant="flat">
         NOVA LISTA
       </v-btn>
     </v-card>
 
     <!-- NEW LIST MODAL -->
-    <ModalNewList
-      @new-list="createNewList"
-      @close="this.openNewList = false"
-      v-if="openNewList"
-    ></ModalNewList>
+    <ModalNewList @new-list="createNewList" @close="this.openNewList = false" v-if="openNewList"></ModalNewList>
 
     <!-- UPDATE LIST MODAL -->
-    <EditListTitle
-      @new-name-list="handleEditNameList"
-      @close-modal="this.showModalEditList = false"
-      v-if="showModalEditList"
-      :id="this.currenteId"
-      :name="this.currentTitle"
-    ></EditListTitle>
+    <EditListTitle @new-name-list="handleEditNameList" @close-modal="this.showModalEditList = false"
+      v-if="showModalEditList" :id="this.currenteId" :name="this.currentTitle"></EditListTitle>
 
     <!-- LOADING MODAL -->
     <Loading v-if="loading"></Loading>
 
-    <Summary
-      :summaryInfos="this.summaryInfos"
-      :userInfo="userInfo"
-      @close-modal="this.showModalSummary = false"
-      v-if="showModalSummary"
-    >
+    <Summary :summaryInfos="this.summaryInfos" :userInfo="userInfo" @close-modal="this.showModalSummary = false"
+      v-if="showModalSummary">
     </Summary>
 
     <!-- DELETE MODAL -->
-    <alertDelete
-      :title="modalDeleteInfos"
-      v-if="showModalDelete"
-      @closed-modal="this.showModalDelete = false"
-      @confirm-modal="handleDeleteItem"
-    ></alertDelete>
+    <alertDelete :title="modalDeleteInfos" v-if="showModalDelete" @closed-modal="this.showModalDelete = false"
+      @confirm-modal="handleDeleteItem"></alertDelete>
 
-    <Error
-      v-if="ErrorModal"
-      :error="errorMessage"
-      @close="ErrorModal = false"
-    ></Error>
+    <Error v-if="ErrorModal" :error="errorMessage" @close="ErrorModal = false"></Error>
   </div>
 </template>
 

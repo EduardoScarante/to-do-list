@@ -4,11 +4,12 @@ export default {
     title: Array,
   },
   methods: {
-    closed (){
-        this.$emit("closed-modal")
+    closed() {
+      this.$emit("closed-modal")
     },
-    confirm (){
-        this.$emit("confirm-modal", this.title[0])
+    confirm() {
+      this.$emit("closed-modal")
+      this.$emit("confirm-modal", this.title[0])
     }
   }
 };
