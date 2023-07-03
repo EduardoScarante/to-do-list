@@ -12,7 +12,6 @@ import alertDelete from "@/components/modal/alertDelete.vue";
 import HomeList from "@/components/HomeList.vue";
 
 import Error from "@/components/Error.vue";
-import axios from "axios";
 
 export default {
   components: {
@@ -143,7 +142,6 @@ export default {
         "house",
       ];
       const query = topicList[Math.floor(Math.random() * topicList.length)];
-      console.log(import.meta.env.VITE_PEXELS);
 
       const res = await fetch(
         `https://api.pexels.com/v1/search?query=${query}&per_page=${this.lists.length}`,
