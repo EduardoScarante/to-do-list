@@ -12,8 +12,8 @@ export default {
     Error
   },
   data: () => ({
-    email: 'scarante@mail.com',
-    password: '123456789#',
+    email: '',
+    password: '',
     isInvalidInfos: '',
     loading: false,
     showPass: false,
